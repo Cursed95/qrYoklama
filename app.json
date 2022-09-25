@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "qr-yoklama",
+    "name": "QR Yoklama",
     "slug": "qr-yoklama",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -24,10 +24,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.proftahseen.qryoklama"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a08d75f8-404b-47f7-a8ad-12050663b0a3"
+      }
     }
   }
 }
