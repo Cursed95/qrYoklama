@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { StyleSheet, Keyboard, KeyboardAvoidingView, Text, TouchableWithoutFeedback, View } from "react-native";
+import React from "react";
+import { StyleSheet, Keyboard, KeyboardAvoidingView, Text, TouchableWithoutFeedback, View, Image } from "react-native";
 import { Button } from "react-native-elements";
 
-export default function DoneScreen({ navigation }) {
+export default function SuccessScreen({ navigation }) {
 
 	const onButtonPress = () => {
 
@@ -15,9 +15,10 @@ export default function DoneScreen({ navigation }) {
     <KeyboardAvoidingView style={styles.containerView} behavior="padding">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.loginScreenContainer}>
+          <Image source={require('../assets/checkIcon.png')} style={styles.icon} />
           <View style={styles.loginFormView}>
             <Text style={styles.logoText}>Yoklamanız Tamamlandı!</Text>
-            <Button buttonStyle={styles.loginButton} onPress={() => onButtonPress()} title="Ana Sayfaya Dön" />
+            <Button buttonStyle={styles.loginButton} onPress={() => onButtonPress()} title="➜" />
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -28,7 +29,8 @@ export default function DoneScreen({ navigation }) {
 const styles = StyleSheet.create({
   containerView: {
     flex: 1,
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: "#3ea444"
   },
   loginScreenContainer: {
     flex: 1,
@@ -36,41 +38,32 @@ const styles = StyleSheet.create({
   logoText: {
     fontSize: 40,
     fontWeight: "800",
-    marginTop: 130,
-    marginBottom: 50,
+    marginTop: 30,
+    marginBottom: 35,
     textAlign: "center",
   },
   infoText: {
     fontSize: 20,
     fontWeight: "400",
-	marginBottom: 15,
+	  marginBottom: 15,
     textAlign: "center",
   },
   loginFormView: {
     flex: 1,
   },
-  loginFormTextInput: {
-    height: 43,
-    fontSize: 14,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "#eaeaea",
-    backgroundColor: "#fafafa",
-    paddingLeft: 10,
-    marginTop: 5,
-    marginBottom: 5,
-  },
   loginButton: {
-    backgroundColor: "#3897f1",
+    backgroundColor: "transparent",
     borderRadius: 5,
-    height: 45,
+    borderColor: "white",
+    height: 50,
     marginTop: 10,
-    width: 100,
-	alignSelf: "center"
+    width: 50,
+	  alignSelf: "center"
   },
-  fbLoginButton: {
-    height: 45,
-    marginTop: 10,
-    backgroundColor: 'transparent',
-  },
+  icon: {
+    width: 150,
+    height: 150,
+    alignSelf: 'center',
+    marginTop: 205,
+  }
 });

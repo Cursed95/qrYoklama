@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function QRScreen({ navigation }) {
+
+	const apiRoot = 'https://SeparateImmenseSort.devicetr.repl.co/';
+
 	const [hasPermission, setHasPermission] = useState(null);
+
+	const [scanned, setScanned] = useState(false);
   
 	const askForCameraPermission = () => {
 	  (async () => {
@@ -16,12 +23,45 @@ export default function QRScreen({ navigation }) {
 	useEffect(() => {
 	  askForCameraPermission();
 	}, []);
+
+	const getData = async (key) => {
+		try {
+		  const value = await AsyncStorage.getItem(key)
+		  if(value !== null) {
+			return value;
+		  }
+		} catch(e) {
+			console.log('There has been a problem with your fetch operation: ' + e);
+		}
+	  }
+
   
 	// What happens when we scan the bar code
-	const handleBarCodeScanned = ({ type, data }) => {
+	const handleBarCodeScanned = async ({ type, data }) => {
 		if (data.startsWith("afl")) {
-			console.log("Scanned: " + data);
-			navigation.navigate('DoneScreen');
+
+			setScanned(true);
+			
+			userData = await getData('userData');
+
+			fetch(apiRoot + 'scan?userData=' + userData + '&qrData=' + data)
+			.then((response) => response.json())
+			.then((data) => {
+			if (data['status'] === true) {
+				
+				navigation.navigate('SuccessScreen');
+
+			}
+			else {
+				navigation.navigate('FailScreen', { message: data['message'] });
+			}
+			})
+			.catch(function(error) {
+			console.log('There has been a problem with your fetch operation: ' + error.message);
+				setLoading(false);
+				throw error;
+			});
+
 		}
 	};
   
@@ -45,7 +85,7 @@ export default function QRScreen({ navigation }) {
 	  <View style={styles.container}>
 		<View style={styles.barcodebox}>
 		  <BarCodeScanner
-			onBarCodeScanned={handleBarCodeScanned}
+			onBarCodeScanned={scanned ? null : handleBarCodeScanned}
 			style={{ height: 400, width: 400 }} />
 		</View>
 	  </View>

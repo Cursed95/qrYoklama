@@ -1,8 +1,11 @@
 import React from "react";
-import { StyleSheet, Keyboard, KeyboardAvoidingView, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
+import { StyleSheet, Keyboard, KeyboardAvoidingView, Text, TextInput, TouchableWithoutFeedback, View , Image} from "react-native";
 import { Button } from "react-native-elements";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen({ navigation }) {
+
+  const apiRoot = 'https://SeparateImmenseSort.devicetr.repl.co/';
 
   const [schoolNumber, setSchoolNumber] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -11,16 +14,30 @@ export default function LoginScreen({ navigation }) {
   const [loading, setLoading] = React.useState(false);
 
 
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value)
+    } catch (e) {
+      console.log(console.log('There has been a problem with your fetch operation: ' + e));
+    }
+  }
+
+
   const onLoginPress = (schoolNumber, password) => {
 
     setLoading(true);
 
-    fetch('https://SeparateImmenseSort.devicetr.repl.co/login?schoolNumber=' + schoolNumber + '&password=' + password)
-    .then((response) => response.text())
+    fetch(apiRoot + 'login?schoolNumber=' + schoolNumber + '&password=' + password)
+    .then((response) => response.json())
     .then((data) => {
-      if (data === 'True') {
+      if (data['status'] === true) {
+
+        delete data['status'];
+        storeData('userData', JSON.stringify(data));
+
         setLoginState(true);
-        navigation.navigate('HomeScreen');
+        navigation.replace('HomeScreen');
+
       } else {
         setLoading(false);
         setLoginState(false);
@@ -32,17 +49,19 @@ export default function LoginScreen({ navigation }) {
         throw error;
       });
 
+
   };
 
   return (
     <KeyboardAvoidingView style={styles.containerView} behavior="padding">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.loginScreenContainer}>
+        <Image source={require('../assets/iaflLogo.png')} style={styles.logo} />
           <View style={styles.loginFormView}>
             <Text style={styles.logoText}>Giriş Yap</Text>
             <TextInput placeholder="Okul Numarası" placeholderColor="#c4c3cb" onChangeText={setSchoolNumber} style={styles.loginFormTextInput} />
             <TextInput placeholder="Şifre" placeholderColor="#c4c3cb" style={styles.loginFormTextInput} onChangeText={setPassword} secureTextEntry={true} />
-            <Button buttonStyle={styles.loginButton} onPress={() => onLoginPress(schoolNumber, password)} title="Login" disabled={loading}/>
+            <Button buttonStyle={styles.loginButton} onPress={() => onLoginPress(schoolNumber, password)} title="Giriş Yap  ➜" disabled={loading}/>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -61,7 +80,7 @@ const styles = StyleSheet.create({
   logoText: {
     fontSize: 40,
     fontWeight: "800",
-    marginTop: 150,
+    marginTop: 35,
     marginBottom: 30,
     textAlign: "center",
   },
@@ -80,7 +99,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   loginButton: {
-    backgroundColor: "#3897f1",
+    backgroundColor: "#963232",
     borderRadius: 5,
     height: 45,
     marginTop: 10,
@@ -92,4 +111,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: 'transparent',
   },
+  logo: {
+    width: 150,
+    height: 150,
+    alignSelf: 'center',
+    marginRight: 6,
+    marginTop: 135
+  }
 });
