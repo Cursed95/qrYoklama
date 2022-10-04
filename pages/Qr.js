@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function QRScreen({ navigation }) {
 
-	const apiRoot = 'https://SeparateImmenseSort.devicetr.repl.co/';
+	const apiRoot = 'http://194.29.55.161:8080/';
 
 	const [hasPermission, setHasPermission] = useState(null);
 
@@ -50,12 +50,12 @@ export default function QRScreen({ navigation }) {
 			.then((data) => {
 			if (data['status'] === true) {
 				setScanned(false);
-				navigation.navigate('SuccessScreen');
+				navigation.replace('SuccessScreen');
 
 			}
 			else {
 				setScanned(false);
-				navigation.navigate('FailScreen', { message: data['message'] });
+				navigation.replace('FailScreen', { message: data['message'] });
 			}
 			})
 			.catch(function(error) {

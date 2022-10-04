@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen({ navigation }) {
 
-  const apiRoot = 'https://SeparateImmenseSort.devicetr.repl.co/';
+  const apiRoot = 'http://194.29.55.161:8080/';
 
   const [schoolNumber, setSchoolNumber] = React.useState("");
   const [password, setPassword] = React.useState("");

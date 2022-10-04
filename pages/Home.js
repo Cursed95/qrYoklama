@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen({ navigation }) {
 
-  const apiRoot = 'https://SeparateImmenseSort.devicetr.repl.co/';
+  const apiRoot = 'http://194.29.55.161:8080/';
 
 	const [infoText, setInfoText] = React.useState("");
 	const [qrState, setQrState] = React.useState(null);
