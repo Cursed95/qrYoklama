@@ -6,7 +6,7 @@ export default function SuccessScreen({ navigation }) {
 
 	const onButtonPress = () => {
 
-		navigation.navigate('HomeScreen');
+		navigation.replace('HomeScreen');
 
 	};
 

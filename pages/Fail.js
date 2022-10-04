@@ -6,7 +6,7 @@ export default function FailScreen(props) {
 
 	const onButtonPress = () => {
 
-		props.navigation.navigate('HomeScreen');
+		props.navigation.replace('HomeScreen');
 
 	};
 

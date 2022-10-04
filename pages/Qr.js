@@ -38,6 +38,7 @@ export default function QRScreen({ navigation }) {
   
 	// What happens when we scan the bar code
 	const handleBarCodeScanned = async ({ type, data }) => {
+		console.log(data);
 		if (data.startsWith("afl")) {
 
 			setScanned(true);
@@ -48,11 +49,12 @@ export default function QRScreen({ navigation }) {
 			.then((response) => response.json())
 			.then((data) => {
 			if (data['status'] === true) {
-				
+				setScanned(false);
 				navigation.navigate('SuccessScreen');
 
 			}
 			else {
+				setScanned(false);
 				navigation.navigate('FailScreen', { message: data['message'] });
 			}
 			})
@@ -62,6 +64,9 @@ export default function QRScreen({ navigation }) {
 				throw error;
 			});
 
+		}
+		else {
+			setScanned(false);
 		}
 	};
   
@@ -76,7 +81,7 @@ export default function QRScreen({ navigation }) {
 	  return (
 		<View style={styles.container}>
 		  <Text style={{ margin: 10 }}>Kamera izni yok.</Text>
-		  <Button title={'Allow Camera'} onPress={() => askForCameraPermission()} />
+		  <Button title={'İzin Ver'} onPress={() => askForCameraPermission()} />
 		</View>)
 	}
   
@@ -86,7 +91,7 @@ export default function QRScreen({ navigation }) {
 		<View style={styles.barcodebox}>
 		  <BarCodeScanner
 			onBarCodeScanned={scanned ? null : handleBarCodeScanned}
-			style={{ height: 400, width: 400 }} />
+			style={{ height: 600, width: 600 }} />
 		</View>
 	  </View>
 	);

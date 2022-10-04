@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Keyboard, KeyboardAvoidingView, Text, TouchableWithoutFeedback, View } from "react-native";
+import { StyleSheet, Keyboard, KeyboardAvoidingView, Text, TouchableWithoutFeedback, View, ScrollView, RefreshControl, Image } from "react-native";
 import { Button } from "react-native-elements";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -10,6 +10,8 @@ export default function HomeScreen({ navigation }) {
 
 	const [infoText, setInfoText] = React.useState("");
 	const [qrState, setQrState] = React.useState(null);
+
+  const [refreshing, setRefreshing] = React.useState(false);
 
 
   const getData = async (key) => {
@@ -23,23 +25,24 @@ export default function HomeScreen({ navigation }) {
 		}
 	  }
 
-
-	useEffect(() => {
-
     async function fetchData() {
       var userData = await getData('userData');
       var schoolNumber = JSON.parse(userData)['schoolNumber'];
+      setRefreshing(true);
       fetch(apiRoot + 'getAvailableAttendances?schoolNumber=' + schoolNumber)
         .then((response) => response.json())
         .then((data) => {
           setQrState(data['isAttendanceAvailable']);
           setInfoText(data['message']);
+          setRefreshing(false);
         })
         .catch(function(error) {
         console.log('There has been a problem with your fetch operation: ' + error.message);
           throw error;
         });
     }
+
+	useEffect(() => {
 
     fetchData();
 
@@ -55,13 +58,18 @@ export default function HomeScreen({ navigation }) {
   return (
     <KeyboardAvoidingView style={styles.containerView} behavior="padding">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.loginScreenContainer}>
-          <View style={styles.loginFormView}>
-            <Text style={styles.logoText}>Hoşgeldiniz!</Text>
-			      <Text style={styles.infoText}>{infoText}</Text>
-            <Button buttonStyle={styles.loginButton} onPress={() => onButtonPress()} title="QR Okut" disabled={!qrState} />
-          </View>
+        <ScrollView style={styles.loginScreenContainer} refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={() => fetchData()} />
+        }>
+
+        <Image source={require('../assets/iaflLogo.png')} style={styles.logo} />
+
+        <View style={styles.loginFormView}>
+			    <Text style={styles.logoText}>{infoText}</Text>
+          <Button buttonStyle={styles.loginButton} onPress={() => onButtonPress()} title="QR Okut" disabled={!qrState} />
         </View>
+      
+      </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
@@ -73,19 +81,20 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   loginScreenContainer: {
+    marginTop: 50,
     flex: 1,
   },
   logoText: {
-    fontSize: 40,
-    fontWeight: "800",
-    marginTop: 130,
-    marginBottom: 50,
+    fontSize: 25,
+    fontWeight: "600",
+    marginTop: 45,
+    marginBottom: 35,
     textAlign: "center",
   },
   infoText: {
     fontSize: 20,
     fontWeight: "400",
-	marginBottom: 15,
+	  marginBottom: 15,
     textAlign: "center",
   },
   loginFormView: {
@@ -103,7 +112,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   loginButton: {
-    backgroundColor: "#3897f1",
+    backgroundColor: "#963232",
     borderRadius: 5,
     height: 45,
     marginTop: 10,
@@ -115,4 +124,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: 'transparent',
   },
+  // align the item vertically
+  logo: {
+    width: 150,
+    height: 150,
+    alignSelf: 'center',
+    marginRight: 6,
+    marginTop: 165
+  }
 });
