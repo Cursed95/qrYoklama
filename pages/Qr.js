@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Button } from "react-native-elements";
 
 
 export default function QRScreen({ navigation }) {
@@ -11,6 +12,12 @@ export default function QRScreen({ navigation }) {
 	const [hasPermission, setHasPermission] = useState(null);
 
 	const [scanned, setScanned] = useState(false);
+
+	const onButtonPress = () => {
+
+		navigation.replace('HomeScreen');
+
+	};
   
 	const askForCameraPermission = () => {
 	  (async () => {
@@ -87,13 +94,16 @@ export default function QRScreen({ navigation }) {
   
 	// Return the View
 	return (
-	  <View style={styles.container}>
-		<View style={styles.barcodebox}>
-		  <BarCodeScanner
-			onBarCodeScanned={scanned ? null : handleBarCodeScanned}
-			style={{ height: 600, width: 600 }} />
+	<>
+		<View style={styles.container}>
+			<View style={styles.barcodebox}>
+				<BarCodeScanner
+				onBarCodeScanned={scanned ? null : handleBarCodeScanned}
+				style={{ height: 600, width: 600 }} />
+			</View>
+			<Button buttonStyle={styles.loginButton} onPress={() => onButtonPress()} title="Geri" />
 		</View>
-	  </View>
+	</>
 	);
   }
   
@@ -115,5 +125,13 @@ export default function QRScreen({ navigation }) {
 	  width: 300,
 	  overflow: 'hidden',
 	  borderRadius: 30
-	}
+	},
+	loginButton: {
+		backgroundColor: "#963232",
+		borderRadius: 5,
+		height: 45,
+		marginTop: 40,
+		width: 100,
+		  alignSelf: "center"
+	  }
   });

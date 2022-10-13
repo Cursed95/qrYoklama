@@ -9,6 +9,8 @@ import HomeScreen from './pages/Home';
 import SuccessScreen from './pages/Success';
 import FailScreen from './pages/Fail';
 
+import AdminScreen from './pages/Admin';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +18,7 @@ export default function App() {
   return (
     <NavigationContainer>
     <Stack.Navigator>
+
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
@@ -24,7 +27,7 @@ export default function App() {
       <Stack.Screen
         name="HomeScreen"
         component={HomeScreen}
-        options={{ title: 'Ana Sayfa', headerShown: false, headerBackVisible: false }}
+        options={{ title: 'Ana Sayfa', headerShown: false}}
       />
       <Stack.Screen
         name="QRScreen"
@@ -43,7 +46,12 @@ export default function App() {
         // Hide the title bar
         options={{ title: 'Tamamlanamadı', headerShown: false }}
       />
-        
+      <Stack.Screen
+        name="AdminScreen"
+        component={AdminScreen}
+        options={{ title: 'Admin Sayfası'}}
+      />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

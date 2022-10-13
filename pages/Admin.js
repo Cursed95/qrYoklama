@@ -1,63 +1,47 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Keyboard, KeyboardAvoidingView, Text, TouchableWithoutFeedback, View, ScrollView, RefreshControl, Image } from "react-native";
+import { StyleSheet, Keyboard, KeyboardAvoidingView, Text, TouchableWithoutFeedback, View, ScrollView, RefreshControl } from "react-native";
 import { Button } from "react-native-elements";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export default function HomeScreen({ navigation }) {
+export default function AdminScreen({ navigation }) {
 
   const apiRoot = 'http://194.29.55.161:8080/';
 
-	const [infoText, setInfoText] = React.useState("");
-	const [qrState, setQrState] = React.useState(null);
-
   const [refreshing, setRefreshing] = React.useState(false);
 
-
-  const getData = async (key) => {
-		try {
-		  const value = await AsyncStorage.getItem(key)
-		  if(value !== null) {
-			return value;
-		  }
-		} catch(e) {
-			console.log('There has been a problem with your fetch operation: ' + e);
-		}
-	  }
+  const [list, setList] = React.useState([]);
 
     async function fetchData() {
-      var userData = await getData('userData');
-      var schoolNumber = JSON.parse(userData)['schoolNumber'];
       setRefreshing(true);
-      fetch(apiRoot + 'getAvailableAttendances?schoolNumber=' + schoolNumber)
+      fetch(apiRoot + 'getScans')
         .then((response) => response.json())
         .then((data) => {
-          setQrState(data['isAttendanceAvailable']);
-          setInfoText(data['message']);
+
+          setList(data['scans'].slice(0, 5));
+
           setRefreshing(false);
         })
         .catch(function(error) {
-        console.log('There has been a problem with your fetch operation: ' + error.message);
+          console.log('There has been a problem with your fetch operation: ' + error.message);
           throw error;
         });
     }
 
     async function fetchDataHeadless() {
-      var userData = await getData('userData');
-      var schoolNumber = JSON.parse(userData)['schoolNumber'];
-      fetch(apiRoot + 'getAvailableAttendances?schoolNumber=' + schoolNumber)
+      fetch(apiRoot + 'getScans')
         .then((response) => response.json())
         .then((data) => {
-          setQrState(data['isAttendanceAvailable']);
-          setInfoText(data['message']);
+          setList(data['scans'].slice(0, 5));
         })
         .catch(function(error) {
-        console.log('There has been a problem with your fetch operation: ' + error.message);
+          console.log('There has been a problem with your fetch operation: ' + error.message);
           throw error;
         });
     }
 
 	useEffect(() => {
+
+    setInterval(fetchDataHeadless, 3000);
 
     fetchDataHeadless();
 
@@ -65,7 +49,7 @@ export default function HomeScreen({ navigation }) {
 
 	const onButtonPress = () => {
 
-		navigation.replace('QRScreen');
+		navigation.replace('LoginScreen');
 
 	};
 
@@ -77,13 +61,18 @@ export default function HomeScreen({ navigation }) {
           <RefreshControl refreshing={refreshing} onRefresh={() => fetchData()} />
         }>
 
-        <Image source={require('../assets/iaflLogo.png')} style={styles.logo} />
-
         <View style={styles.loginFormView}>
-			    <Text style={styles.logoText}>{infoText}</Text>
-          <Button buttonStyle={styles.loginButton} onPress={() => onButtonPress()} title="QR Okut" disabled={!qrState} />
+          <Text style={styles.logoText}>Son Geçişler:</Text>
+          {list.map((scan) => {
+          return (
+            <View>
+              <Text key={scan[0]} style={styles.item}>{scan[1]} - {scan[2]} {scan[3]}</Text>
+            </View>
+          );
+          })}
+          <Button buttonStyle={styles.loginButton} onPress={() => onButtonPress()} title="Çıkış Yap" />
         </View>
-      
+
       </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -100,9 +89,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   logoText: {
-    fontSize: 25,
-    fontWeight: "600",
-    marginTop: 45,
+    fontSize: 45,
+    fontWeight: "800",
     marginBottom: 35,
     textAlign: "center",
   },
@@ -114,6 +102,7 @@ const styles = StyleSheet.create({
   },
   loginFormView: {
     flex: 1,
+
   },
   loginFormTextInput: {
     height: 43,
@@ -130,9 +119,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#963232",
     borderRadius: 5,
     height: 45,
-    marginTop: 10,
+    marginTop: 30,
     width: 100,
-	alignSelf: "center"
+	  alignSelf: "center"
   },
   fbLoginButton: {
     height: 45,
@@ -146,5 +135,22 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginRight: 6,
     marginTop: 165
+  },
+  item: {
+    padding: 15,
+    fontSize: 25,
+    fontWeight: "600",
+    borderColor: "#963232",
+    borderWidth: 3,
+    margin: 5,
+    borderRadius: 15,
+  },
+  exportButton: {
+    backgroundColor: "blue",
+    borderRadius: 5,
+    height: 45,
+    marginTop: 40,
+    width: 100,
+	  alignSelf: "center"
   }
 });

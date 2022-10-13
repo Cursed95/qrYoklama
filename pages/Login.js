@@ -10,8 +10,10 @@ export default function LoginScreen({ navigation }) {
   const [schoolNumber, setSchoolNumber] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const [loginState, setLoginState] = React.useState(null);
+  const [loginState, setLoginState] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
+
+  const [infoText, setInfoText] = React.useState("");
 
 
   const storeData = async (key, value) => {
@@ -38,14 +40,22 @@ export default function LoginScreen({ navigation }) {
         setLoginState(true);
         navigation.replace('HomeScreen');
 
-      } else {
+      } else if (data['status'] === 'admin') {
+
+        setLoginState(true);
+        navigation.replace('AdminScreen');
+
+      }
+      else {
         setLoading(false);
         setLoginState(false);
+        setInfoText(data['message']);
       }
     })
     .catch(function(error) {
       console.log('There has been a problem with your fetch operation: ' + error.message);
         setLoading(false);
+        setInfoText("Bilinmeyen hata 10/D'den Tahsin ile görüşün.");
         throw error;
       });
 
@@ -61,6 +71,7 @@ export default function LoginScreen({ navigation }) {
             <Text style={styles.logoText}>Giriş Yap</Text>
             <TextInput placeholder="Okul Numarası" placeholderColor="#c4c3cb" onChangeText={setSchoolNumber} style={styles.loginFormTextInput} />
             <TextInput placeholder="Şifre" placeholderColor="#c4c3cb" style={styles.loginFormTextInput} onChangeText={setPassword} secureTextEntry={true} />
+            {!loginState && <Text style={styles.infoText}>{infoText}</Text>}
             <Button buttonStyle={styles.loginButton} onPress={() => onLoginPress(schoolNumber, password)} title="Giriş Yap  ➜" disabled={loading}/>
           </View>
         </View>
@@ -117,5 +128,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginRight: 6,
     marginTop: 135
+  },
+  infoText: {
+    fontSize: 20,
+    fontWeight: "400",
+    margin: 10,
+    textAlign: "center",
+    color: "#ef3232"
   }
 });
