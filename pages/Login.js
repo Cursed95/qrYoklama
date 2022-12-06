@@ -18,6 +18,7 @@ export default function LoginScreen({ navigation }) {
 
   const storeData = async (key, value) => {
     try {
+      
       await AsyncStorage.setItem(key, value)
     } catch (e) {
       console.log(console.log('There has been a problem with your fetch operation: ' + e));
