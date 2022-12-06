@@ -55,7 +55,7 @@ export default function LoginScreen({ navigation }) {
     .catch(function(error) {
       console.log('There has been a problem with your fetch operation: ' + error.message);
         setLoading(false);
-        setInfoText("Bilinmeyen hata 10/D'den Tahsin ile görüşün.");
+        setInfoText("Gizli mesajı buldun! 10/D'den Tahsin'e bildir.");
         throw error;
       });
 
@@ -69,8 +69,8 @@ export default function LoginScreen({ navigation }) {
         <Image source={require('../assets/iaflLogo.png')} style={styles.logo} />
           <View style={styles.loginFormView}>
             <Text style={styles.logoText}>Giriş Yap</Text>
-            <TextInput placeholder="Okul Numarası" placeholderColor="#c4c3cb" onChangeText={setSchoolNumber} style={styles.loginFormTextInput} />
-            <TextInput placeholder="Şifre" placeholderColor="#c4c3cb" style={styles.loginFormTextInput} onChangeText={setPassword} secureTextEntry={true} />
+            <TextInput placeholder="Okul Numarası" placeholderTextColor="#c4c3cb" onChangeText={setSchoolNumber} style={styles.loginFormTextInput} />
+            <TextInput placeholder="Şifre" placeholderTextColor="#c4c3cb" style={styles.loginFormTextInput} onChangeText={setPassword} secureTextEntry={true} />
             {!loginState && <Text style={styles.infoText}>{infoText}</Text>}
             <Button buttonStyle={styles.loginButton} onPress={() => onLoginPress(schoolNumber, password)} title="Giriş Yap  ➜" disabled={loading}/>
           </View>

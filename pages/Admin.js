@@ -17,7 +17,7 @@ export default function AdminScreen({ navigation }) {
         .then((response) => response.json())
         .then((data) => {
 
-          setList(data['scans'].slice(0, 5));
+          setList(data['scans']);
 
           setRefreshing(false);
         })
@@ -31,7 +31,7 @@ export default function AdminScreen({ navigation }) {
       fetch(apiRoot + 'getScans')
         .then((response) => response.json())
         .then((data) => {
-          setList(data['scans'].slice(0, 5));
+          setList(data['scans']);
         })
         .catch(function(error) {
           console.log('There has been a problem with your fetch operation: ' + error.message);
@@ -56,25 +56,25 @@ export default function AdminScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView style={styles.containerView} behavior="padding">
+    <Text style={styles.logoText}>Son Geçişler:</Text>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView style={styles.loginScreenContainer} refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={() => fetchData()} />
         }>
 
         <View style={styles.loginFormView}>
-          <Text style={styles.logoText}>Son Geçişler:</Text>
-          {list.map((scan) => {
+          {list.map((scan, index) => {
           return (
             <View>
-              <Text key={scan[0]} style={styles.item}>{scan[1]} - {scan[2]} {scan[3]}</Text>
+              <Text key={index} style={styles.item}>{scan[1]} {scan[2]} {scan[3]} {scan[4]}</Text>
             </View>
           );
           })}
-          <Button buttonStyle={styles.loginButton} onPress={() => onButtonPress()} title="Çıkış Yap" />
         </View>
 
       </ScrollView>
       </TouchableWithoutFeedback>
+      <Button buttonStyle={styles.loginButton} onPress={() => onButtonPress()} title="Çıkış Yap" />
     </KeyboardAvoidingView>
   );
 }
@@ -85,13 +85,14 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   loginScreenContainer: {
-    marginTop: 50,
+    marginTop: 10,
     flex: 1,
   },
   logoText: {
     fontSize: 45,
     fontWeight: "800",
-    marginBottom: 35,
+    marginTop: 25,
+    marginBottom: 10,
     textAlign: "center",
   },
   infoText: {
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   loginFormView: {
-    flex: 1,
+    flex: 1
 
   },
   loginFormTextInput: {
@@ -119,7 +120,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#963232",
     borderRadius: 5,
     height: 45,
-    marginTop: 30,
+    marginTop: 20,
+    marginBottom: 20,
     width: 100,
 	  alignSelf: "center"
   },
