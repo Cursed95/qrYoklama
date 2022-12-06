@@ -1,6 +1,11 @@
 {
 	"build": {
-	  "production": {}
+	  "production": {},
+	  "test": {
+	    "android": {
+			"buildType": "apk"
+		}
+	  }
 	},
 	"cli": {
 		"version": ">= 2.9.0",
